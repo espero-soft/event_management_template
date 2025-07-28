@@ -15,6 +15,7 @@ class EventManager {
     bindEvents() {
         // Modal events
         document.getElementById('addEventBtn').addEventListener('click', () => this.openModal());
+        document.getElementById('accountBtn').addEventListener('click', () => this.openAccountPage());
         document.getElementById('eventForm').addEventListener('submit', (e) => this.handleSubmit(e));
         document.getElementById('cancelBtn').addEventListener('click', () => this.closeModal());
         document.getElementById('cancelDeleteBtn').addEventListener('click', () => this.closeDeleteModal());
@@ -61,6 +62,10 @@ class EventManager {
         }
         
         modal.style.display = 'block';
+    }
+
+    openAccountPage() {
+        window.location.href = 'account.html';
     }
 
     closeModal() {
