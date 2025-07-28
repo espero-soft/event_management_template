@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de Gestion d'Événements</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-calendar-alt"></i> Gestionnaire d'Événements</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" id="accountBtn">
+                    <i class="fas fa-user"></i> Mon Compte
+                </button>
+                <button class="btn btn-primary" id="addEventBtn">
+                    <i class="fas fa-plus"></i> Nouvel Événement
+                </button>
+            </div>
+        </header>
+
+        <div class="search-filter-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher un événement...">
+            </div>
+            <div class="filter-box">
+                <select id="filterSelect">
+                    <option value="all">Tous les événements</option>
+                    <option value="upcoming">À venir</option>
+                    <option value="past">Passés</option>
+                    <option value="today">Aujourd'hui</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-calendar-check"></i>
+                <div>
+                    <h3 id="totalEvents">0</h3>
+                    <p>Total Événements</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <h3 id="upcomingEvents">0</h3>
+                    <p>À Venir</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-calendar-day"></i>
+                <div>
+                    <h3 id="todayEvents">0</h3>
+                    <p>Aujourd'hui</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="events-section">
+            <div id="eventsContainer" class="events-grid">
+                <!-- Les événements seront affichés ici -->
+            </div>
+            <div id="noEvents" class="no-events" style="display: none;">
+                <i class="fas fa-calendar-times"></i>
+                <h3>Aucun événement trouvé</h3>
+                <p>Créez votre premier événement pour commencer</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de gestion de compte -->
+    <div id="accountModal" class="modal">
+        <div class="modal-content account-modal">
+            <div class="modal-header">
+                <h2>Gestion du Compte</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="account-tabs">
+                <button class="tab-button active" data-tab="profile">
+                    <i class="fas fa-user"></i> Profil
+                </button>
+                <button class="tab-button" data-tab="preferences">
+                    <i class="fas fa-cog"></i> Préférences
+                </button>
+                <button class="tab-button" data-tab="data">
+                    <i class="fas fa-database"></i> Données
+                </button>
+            </div>
+            
+            <!-- Onglet Profil -->
+            <div class="tab-content active" id="profile-tab">
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="userName">Nom d'utilisateur</label>
+                        <input type="text" id="userName" placeholder="Votre nom">
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email</label>
+                        <input type="email" id="userEmail" placeholder="votre.email@exemple.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="userOrganization">Organisation</label>
+                        <input type="text" id="userOrganization" placeholder="Votre organisation">
+                    </div>
+                    <div class="form-group">
+                        <label for="userRole">Rôle</label>
+                        <select id="userRole">
+                            <option value="user">Utilisateur</option>
+                            <option value="manager">Gestionnaire</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Onglet Préférences -->
+            <div class="tab-content" id="preferences-tab">
+                <form id="preferencesForm">
+                    <div class="form-group">
+                        <label for="defaultView">Vue par défaut</label>
+                        <select id="defaultView">
+                            <option value="all">Tous les événements</option>
+                            <option value="upcoming">Événements à venir</option>
+                            <option value="today">Événements d'aujourd'hui</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventsPerPage">Événements par page</label>
+                        <select id="eventsPerPage">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">Tous</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateFormat">Format de date</label>
+                        <select id="dateFormat">
+                            <option value="fr-FR">Français (jj/mm/aaaa)</option>
+                            <option value="en-US">Anglais (mm/jj/aaaa)</option>
+                            <option value="en-GB">Anglais UK (jj/mm/aaaa)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeFormat">Format d'heure</label>
+                        <select id="timeFormat">
+                            <option value="24h">24 heures</option>
+                            <option value="12h">12 heures (AM/PM)</option>
+                        </select>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="enableNotifications">
+                            <span class="checkbox-custom"></span>
+                            Activer les notifications
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="autoSave">
+                            <span class="checkbox-custom"></span>
+                            Sauvegarde automatique
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="theme">Thème</label>
+                        <select id="theme">
+                            <option value="default">Par défaut</option>
+                            <option value="dark">Sombre</option>
+                            <option value="light">Clair</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Onglet Données -->
+            <div class="tab-content" id="data-tab">
+                <div class="data-section">
+                    <h3><i class="fas fa-download"></i> Exporter les données</h3>
+                    <p>Téléchargez vos événements au format JSON ou CSV.</p>
+                    <div class="button-group">
+                        <button class="btn btn-primary" id="exportJsonBtn">
+                            <i class="fas fa-file-code"></i> Exporter JSON
+                        </button>
+                        <button class="btn btn-primary" id="exportCsvBtn">
+                            <i class="fas fa-file-csv"></i> Exporter CSV
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h3><i class="fas fa-upload"></i> Importer les données</h3>
+                    <p>Importez vos événements depuis un fichier JSON.</p>
+                    <div class="file-upload">
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                        <button class="btn btn-secondary" id="importBtn">
+                            <i class="fas fa-file-upload"></i> Choisir un fichier
+                        </button>
+                        <span id="fileName"></span>
+                    </div>
+                    <button class="btn btn-primary" id="processImportBtn" style="display: none;">
+                        <i class="fas fa-upload"></i> Importer
+                    </button>
+                </div>
+
+                <div class="data-section danger-zone">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Zone de danger</h3>
+                    <p>Ces actions sont irréversibles. Procédez avec prudence.</p>
+                    <div class="button-group">
+                        <button class="btn btn-warning" id="clearDataBtn">
+                            <i class="fas fa-trash-alt"></i> Effacer toutes les données
+                        </button>
+                        <button class="btn btn-danger" id="resetAppBtn">
+                            <i class="fas fa-redo"></i> Réinitialiser l'application
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelAccountBtn">Annuler</button>
+                <button type="button" class="btn btn-primary" id="saveAccountBtn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour ajouter/modifier un événement -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nouvel Événement</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="eventTitle">Titre de l'événement *</label>
+                    <input type="text" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date *</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventTime">Heure *</label>
+                    <input type="time" id="eventTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Lieu</label>
+                    <input type="text" id="eventLocation" placeholder="Lieu de l'événement">
+                </div>
+                <div class="form-group">
+                    <label for="eventCategory">Catégorie</label>
+                    <select id="eventCategory">
+                        <option value="meeting">Réunion</option>
+                        <option value="conference">Conférence</option>
+                        <option value="workshop">Atelier</option>
+                        <option value="social">Social</option>
+                        <option value="other">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" rows="4" placeholder="Description de l'événement"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Annuler</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmer la suppression</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cet événement ?</p>
+                <p><strong id="deleteEventTitle"></strong></p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/script.js"></script>
+</body>
+</html>
